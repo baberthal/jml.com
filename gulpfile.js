@@ -19,6 +19,7 @@ var options = {
     src: './src/',
     dist: './dist/',
     tmp: './tmp',
+    files: './files/',
     scss: {
         indentedSyntax: false
     },
@@ -60,6 +61,7 @@ gulp.task('assets', function() {
     return gulp.src([options.src + 'img/**/*',
                      options.src + 'fonts/**/*',
                      options.src + 'font-awesome/**/*',
+                     options.src + 'files/**/*',
                      options.src + 'mail/**/*'], { base: options.src })
              .pipe(gulp.dest(options.dist));
 });
@@ -82,7 +84,8 @@ gulp.task('default', ['clean'], function() {
 });
 
 gulp.task('deploy', function() {
-    return gulp.src(options.dist + '**/*')
+    return gulp.src([options.dist + '**/*',
+                     options.files + '**/*'])
         .pipe(pages());
 });
 
