@@ -82,7 +82,7 @@ gulp.task('default', ['clean'], function() {
 });
 
 gulp.task('deploy', function() {
-    gulp.src(options.dist + '**/*')
+    return gulp.src(options.dist + '**/*')
         .pipe(pages());
 });
 
