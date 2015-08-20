@@ -102,3 +102,4 @@ bower_components
 .bower-tmp
 
 dist
+.publish
