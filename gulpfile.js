@@ -12,7 +12,8 @@ var gulp = require('gulp'),
     iff = require('gulp-if'),
     csso = require('gulp-csso'),
     handleErrors = require('./gulp/util/handleErrors'),
-    bs = require('browser-sync').create();
+    bs = require('browser-sync').create(),
+    pages = require('gulp-gh-pages');
 
 var options = {
     src: './src/',
@@ -78,6 +79,11 @@ gulp.task('build', ['html', 'assets']);
 
 gulp.task('default', ['clean'], function() {
     gulp.start('build');
+});
+
+gulp.task('deploy', function() {
+    gulp.src(options.dist + '**/*')
+        .pipe(pages());
 });
 
 // vim: set ts=8 sw=4 tw=0 ft=javascript et :
