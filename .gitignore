@@ -103,3 +103,4 @@ bower_components
 
 dist
 .publish
+src/css/main.css
