@@ -6,22 +6,38 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     sass = require('gulp-sass'),
     maps = require('gulp-sourcemaps'),
+    autoprefixer = require('gulp-autoprefixer'),
     del = require('del'),
     useref = require('gulp-useref'),
     iff = require('gulp-if'),
-    csso = require('gulp-csso');
+    csso = require('gulp-csso'),
+    handleErrors = require('./gulp/util/handleErrors'),
+    bs = require('browser-sync').create();
 
 var options = {
     src: './src/',
-    dist: './dist/'
+    dist: './dist/',
+    tmp: './tmp',
+    scss: {
+        indentedSyntax: false
+    },
+    autoprefixer: {
+        browsers: ['last 2 versions']
+    },
+    browserSync: {
+        server: './src'
+    }
 };
 
 gulp.task('sass', function() {
     return gulp.src(options.src + 'scss/main.scss')
         .pipe(maps.init())
-        .pipe(sass())
-        .pipe(maps.write('./'))
-        .pipe(gulp.dest(options.src + 'css/'));
+        .pipe(sass(options.scss))
+        .on('error', handleErrors)
+        .pipe(maps.write())
+        .pipe(autoprefixer(options.autoprefixer))
+        .pipe(gulp.dest(options.src + 'css/'))
+        .pipe(bs.stream());
 });
 
 gulp.task('html', ['sass'], function() {
@@ -47,7 +63,11 @@ gulp.task('assets', function() {
              .pipe(gulp.dest(options.dist));
 });
 
-gulp.task('serve', ['sass', 'watch']);
+gulp.task('serve', ['sass', 'watch'], function() {
+    bs.init(options.browserSync);
+    gulp.watch(options.src + 'scss/**/*.scss', ['sass']);
+    gulp.watch(options.src + 'index.html').on('change', bs.reload);
+});
 
 gulp.task('clean', function() {
     del([options.dist]);
